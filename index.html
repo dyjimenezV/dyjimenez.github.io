@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DORAMI | Authentic K-Beauty & Organic Tints</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display (Chic Serif) & Montserrat (Clean Sans) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for minimalist icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS (Tailwind Config) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dorami: {
+                            butter: '#FDF2B3',       /* Chic champagne/butter yellow */
+                            blush: '#F3C1C6',        /* Sophisticated blush pink */
+                            cream: '#FAFAFA',        /* Clean off-white background */
+                            dark: '#1A1A1A',         /* Elegant soft black for text */
+                            muted: '#737373',        /* Gray for secondary text */
+                            border: '#EAEAEA'        /* Light border color */
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Enlace a la hoja de estilos separada -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="selection:bg-dorami-blush selection:text-white">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 translate-y-32 opacity-0 transition-all duration-500 bg-dorami-dark text-white px-8 py-4 rounded-sm shadow-2xl flex items-center space-x-4 z-50">
+        <i class="fa-solid fa-check text-dorami-butter"></i>
+        <div>
+            <p id="toast-message" class="text-sm font-medium tracking-wide">Producto añadido a tu bolsa.</p>
+        </div>
+    </div>
+
+    <!-- Floating Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-2 group">
+                <span class="font-serif text-2xl tracking-widest text-dorami-dark group-hover:text-dorami-blush transition-colors">DORAMI</span>
+                <span class="hidden sm:inline-block w-px h-6 bg-dorami-border mx-2"></span>
+                <span class="hidden sm:inline-block text-[10px] uppercase tracking-[0.2em] text-dorami-muted mt-1">K-Beauty</span>
+            </a>
+            
+            <nav class="hidden md:flex items-center space-x-10 text-xs uppercase tracking-widest font-medium text-dorami-dark">
+                <a href="#inicio" class="hover:text-dorami-blush transition-colors">Inicio</a>
+                <a href="#filosofia" class="hover:text-dorami-blush transition-colors">Filosofía</a>
+                <a href="#coleccion" class="hover:text-dorami-blush transition-colors">Colección</a>
+                <a href="#journal" class="hover:text-dorami-blush transition-colors">Journal</a>
+            </nav>
+
+            <div class="flex items-center">
+                <button onclick="toggleCartDrawer()" class="relative text-dorami-dark hover:text-dorami-blush transition-colors p-2 flex items-center space-x-2">
+                    <span class="text-xs uppercase tracking-widest font-medium hidden sm:inline-block">Bolsa</span>
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-counter" class="absolute top-0 -right-1 w-4 h-4 bg-dorami-butter text-dorami-dark text-[10px] font-bold rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Slide-over Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-dorami-dark/20 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col h-full">
+                <div class="px-8 py-6 border-b border-dorami-border flex items-center justify-between">
+                    <h3 class="font-serif text-xl text-dorami-dark tracking-wide">Tu Bolsa</h3>
+                    <button onclick="toggleCartDrawer()" class="text-dorami-muted hover:text-dorami-dark transition-colors">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-8 space-y-6" id="cart-items-container">
+                    <div class="text-center py-32 text-dorami-muted" id="empty-cart-msg">
+                        <p class="font-serif text-lg italic text-dorami-dark mb-2">Tu bolsa está vacía.</p>
+                        <p class="text-xs uppercase tracking-widest">Descubre tu tono ideal en nuestra colección.</p>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-dorami-cream border-t border-dorami-border space-y-6">
+                    <div class="flex justify-between items-center text-sm uppercase tracking-widest font-medium text-dorami-dark">
+                        <span>Subtotal</span>
+                        <span id="cart-total" class="font-serif text-xl normal-case">$0.00</span>
+                    </div>
+                    <button onclick="checkoutCart()" class="w-full bg-dorami-dark text-white py-4 text-xs uppercase tracking-[0.2em] font-medium hover:bg-dorami-blush hover:text-dorami-dark transition-colors duration-300">
+                        Finalizar Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Hero Editorial -->
+    <section id="inicio" class="relative pt-32 pb-20 md:pt-40 md:pb-32 bg-dorami-cream overflow-hidden">
+        <div class="absolute top-20 -left-20 w-64 h-64 bg-dorami-butter rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+        <div class="absolute bottom-10 -right-20 w-80 h-80 bg-dorami-blush rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-10">
+            <div class="space-y-8 fade-in">
+                <div class="inline-block border border-dorami-dark px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-dorami-dark">
+                    Auténtico Maquillaje Coreano
+                </div>
+                
+                <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl text-dorami-dark leading-[1.1]">
+                    El arte del <br>
+                    <span class="italic text-dorami-blush">glow natural.</span>
+                </h1>
+                
+                <p class="text-sm md:text-base text-dorami-muted font-light leading-relaxed max-w-md">
+                    Fórmulas ligeras, tonos orgánicos y acabados luminosos. Importamos directamente desde Seúl los tintes labiales más exclusivos para resaltar tu belleza auténtica.
+                </p>
+
+                <div class="pt-4">
+                    <a href="#coleccion" class="inline-block bg-dorami-dark text-white px-10 py-4 text-xs uppercase tracking-[0.2em] font-medium hover:bg-dorami-blush hover:text-dorami-dark transition-colors duration-300">
+                        Explorar Colección
+                    </a>
+                </div>
+            </div>
+
+            <div class="relative fade-in" style="animation-delay: 0.2s;">
+                <div class="aspect-[4/5] relative overflow-hidden">
+                    <img src="img/modelo.jpg" alt="Chic K-Beauty Glow" class="w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-all duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dorami-dark/40 to-transparent"></div>
+                    <div class="absolute bottom-8 left-8 text-white">
+                        <p class="font-serif italic text-2xl">Dewy Finish</p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] mt-2">Tendencia Seúl 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Filosofía de Marca -->
+    <section id="filosofia" class="py-24 bg-white border-y border-dorami-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto space-y-6 mb-16 fade-in">
+                <h2 class="font-serif text-3xl md:text-4xl text-dorami-dark">La Filosofía Dorami</h2>
+                <div class="w-12 h-px bg-dorami-blush mx-auto"></div>
+                <p class="text-dorami-muted text-sm leading-relaxed">
+                    Creemos en el maquillaje como una extensión de tu piel. Seleccionamos productos coreanos que nutren, hidratan y aportan color orgánico sin comprometer la comodidad.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center space-y-4 group">
+                    <div class="w-16 h-16 rounded-full bg-dorami-cream mx-auto flex items-center justify-center text-dorami-dark group-hover:bg-dorami-butter transition-colors duration-500">
+                        <i class="fa-solid fa-leaf text-xl"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-dorami-dark">Selección Orgánica</h3>
+                    <p class="text-xs text-dorami-muted leading-relaxed px-4">
+                        Fórmulas enriquecidas con extractos botánicos y colores derivados de la naturaleza. Cuidado y color en un solo paso.
+                    </p>
+                </div>
+                <div class="text-center space-y-4 group">
+                    <div class="w-16 h-16 rounded-full bg-dorami-cream mx-auto flex items-center justify-center text-dorami-dark group-hover:bg-dorami-blush group-hover:text-white transition-colors duration-500">
+                        <i class="fa-solid fa-plane text-xl"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-dorami-dark">Importación Directa</h3>
+                    <p class="text-xs text-dorami-muted leading-relaxed px-4">
+                        Trabajamos directamente con las casas cosméticas en Corea del Sur para garantizar 100% de autenticidad en cada producto.
+                    </p>
+                </div>
+                <div class="text-center space-y-4 group">
+                    <div class="w-16 h-16 rounded-full bg-dorami-cream mx-auto flex items-center justify-center text-dorami-dark group-hover:bg-dorami-butter transition-colors duration-500">
+                        <i class="fa-solid fa-droplet text-xl"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-dorami-dark">Texturas Ligeras</h3>
+                    <p class="text-xs text-dorami-muted leading-relaxed px-4">
+                        Olvídate de la pesadez. Ofrecemos acabados tipo 'water tint' y 'blur velvet' que se sienten como una segunda piel.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Colección Editorial (Products) -->
+    <section id="coleccion" class="py-24 bg-dorami-cream">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 space-y-6 md:space-y-0">
+                <div class="space-y-4">
+                    <h2 class="font-serif text-3xl md:text-4xl text-dorami-dark">El Edit de Labios</h2>
+                    <p class="text-sm text-dorami-muted">Nuestra curaduría de las mejores marcas de K-Beauty.</p>
+                </div>
+                
+                <div class="flex flex-wrap gap-6 text-xs uppercase tracking-widest">
+                    <button onclick="filterProducts('all')" id="filter-all" class="filter-btn text-dorami-dark font-medium border-b border-dorami-dark pb-1 transition-all">Todos</button>
+                    <button onclick="filterProducts('Romand')" id="filter-Romand" class="filter-btn text-dorami-muted hover:text-dorami-dark pb-1 transition-all">Romand</button>
+                    <button onclick="filterProducts('Amuse')" id="filter-Amuse" class="filter-btn text-dorami-muted hover:text-dorami-dark pb-1 transition-all">Amuse</button>
+                    <button onclick="filterProducts('Peripera')" id="filter-Peripera" class="filter-btn text-dorami-muted hover:text-dorami-dark pb-1 transition-all">Peripera</button>
+                    <button onclick="filterProducts('Dasique')" id="filter-Dasique" class="filter-btn text-dorami-muted hover:text-dorami-dark pb-1 transition-all">Dasique</button>
+                </div>
+            </div>
+
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Dynamic product cards rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Journal / Frases Chic -->
+    <section id="journal" class="py-32 bg-white relative">
+        <div class="max-w-4xl mx-auto px-6 text-center space-y-12">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-dorami-muted">Dorami Journal</h2>
+            
+            <div class="min-h-[120px] flex items-center justify-center px-4">
+                <p id="poetry-display" class="font-serif text-2xl md:text-4xl text-dorami-dark leading-snug italic transition-opacity duration-500">
+                    "La verdadera elegancia reside en resaltar lo que ya eres. Un toque de color, un brillo sutil, y la confianza de ser tú misma."
+                </p>
+            </div>
+
+            <div>
+                <button onclick="nextPoetryQuote()" class="text-xs uppercase tracking-widest text-dorami-dark border-b border-dorami-dark hover:text-dorami-blush hover:border-dorami-blush pb-1 transition-colors">
+                    Siguiente Inspiración
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Contact / Consultations -->
+    <section class="py-24 bg-dorami-dark text-white">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div class="space-y-8">
+                <h2 class="font-serif text-3xl md:text-5xl leading-tight">Encuentra tu <br><span class="italic text-dorami-butter">tono perfecto.</span></h2>
+                <p class="text-sm text-gray-400 font-light leading-relaxed max-w-md">
+                    ¿No estás segura de qué tono complementa mejor tu piel? Nuestro equipo está listo para brindarte asesoría personalizada y ayudarte a crear tu look K-Beauty ideal.
+                </p>
+                <div class="space-y-4 pt-4">
+                    <p class="text-xs uppercase tracking-[0.2em]"><i class="fa-regular fa-envelope text-dorami-blush mr-3 text-base"></i> dayanna.jimenez@cu.ucsg.edu.ec</p>
+                    <p class="text-xs uppercase tracking-[0.2em]"><i class="fa-brands fa-instagram text-dorami-blush mr-3 text-base"></i> @dorami.ec</p>
+                </div>
+            </div>
+
+            <div class="bg-white/5 p-8 md:p-12 border border-white/10 backdrop-blur-sm">
+                <form onsubmit="handleContactSubmit(event)" class="space-y-6">
+                    <div>
+                        <input type="text" id="contact-name" required placeholder="Nombre" class="w-full bg-transparent border-b border-white/30 text-white placeholder-white/50 py-3 text-sm focus:outline-none focus:border-dorami-blush transition-colors">
+                    </div>
+                    <div>
+                        <input type="text" id="contact-info" required placeholder="Email o Teléfono" class="w-full bg-transparent border-b border-white/30 text-white placeholder-white/50 py-3 text-sm focus:outline-none focus:border-dorami-blush transition-colors">
+                    </div>
+                    <div>
+                        <textarea id="contact-msg" rows="3" required placeholder="¿En qué podemos asesorarte?" class="w-full bg-transparent border-b border-white/30 text-white placeholder-white/50 py-3 text-sm focus:outline-none focus:border-dorami-blush transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-dorami-butter text-dorami-dark py-4 text-xs uppercase tracking-[0.2em] font-medium hover:bg-white transition-colors duration-300">
+                        Enviar Mensaje
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dorami-cream border-t border-dorami-border py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div class="font-serif text-xl tracking-widest text-dorami-dark">
+                DORAMI
+            </div>
+            <div class="flex space-x-6 text-sm text-dorami-muted">
+                <a href="#" class="hover:text-dorami-dark transition-colors">Instagram</a>
+                <a href="#" class="hover:text-dorami-dark transition-colors">TikTok</a>
+                <a href="#" class="hover:text-dorami-dark transition-colors">Outlook</a>
+            </div>
+            <p class="text-[10px] uppercase tracking-widest text-dorami-muted">
+                &copy; 2026 Dorami K-Beauty
+            </p>
+        </div>
+    </footer>
+
+    <!-- Enlace al Javascript separado -->
+    <script src="script.js"></script>
+</body>
+</html>

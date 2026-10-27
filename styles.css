@@ -1,0 +1,46 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #FAFAFA;
+    color: #1A1A1A;
+    overflow-x: hidden;
+}
+h1, h2, h3, h4, .font-serif {
+    font-family: 'Playfair Display', serif;
+}
+.chic-card {
+    background: #ffffff;
+    border: 1px solid #EAEAEA;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.chic-card:hover {
+    box-shadow: 0 15px 35px -5px rgba(243, 193, 198, 0.15);
+    transform: translateY(-4px);
+}
+.glass-nav {
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(234, 234, 234, 0.5);
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #FAFAFA;
+}
+::-webkit-scrollbar-thumb {
+    background: #F3C1C6;
+    border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #D9A0A6;
+}
+.fade-in {
+    animation: fadeIn 1s ease-in forwards;
+    opacity: 0;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
